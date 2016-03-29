@@ -89,7 +89,7 @@ server.on('connection', function(socket) {
               socket.sendMessage(message)})
      watch.on('change', (path) => {
               let message = {
-                action: 'create',
+                action: 'update',
                 path: path,
                 type: 'file',
                 contents: null,
@@ -98,7 +98,7 @@ server.on('connection', function(socket) {
               socket.sendMessage(message)})
      watch.on('unlink', (path) => {
               let message = {
-                action: 'remove',
+                action: 'delete',
                 path: path,
                 type: 'file',
                 contents: null,
@@ -116,17 +116,13 @@ server.on('connection', function(socket) {
               socket.sendMessage(message)})
      watch.on('unlinkDir', (path) => {
               let message = {
-                action: 'remove',
+                action: 'delete',
                 path: path,
                 type: 'dir',
                 contents: null,
                 updated: new Date().getTime()
               }
               socket.sendMessage(message) })
-     socket.on('end', () => {
-            console.log("End connection")
-            clients.splice(clients.indexOf(socket), 1)
-        })
 })
 
 

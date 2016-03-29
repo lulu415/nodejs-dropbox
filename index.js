@@ -90,7 +90,6 @@ function setFileMeta(req, res, next) {
 }
 
 function* sendHeaders(req, res, next) {
-    console.log("inside sendHeaders()....")
     if (req.stat.isDirectory()) {
         let files = yield fs.promise.readdir(req.filePath)
         res.body = JSON.stringify(files)
