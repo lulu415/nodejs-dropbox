@@ -2,7 +2,7 @@
 
 This is a basic Dropbox clone to sync files across multiple remote folders.
 
-Time spent: `<Number of hours spent>`
+Time spent: `<24>`
 
 ### Features
 

@@ -20,7 +20,7 @@ let songbird = require('songbird')
 
 const NODE_ENV = process.env.NODE_ENV
 const PORT = process.env.PORT || 8000
-const ROOT_DIR = path.resolve(argv.dir)
+const ROOT_DIR = path.resolve(argv.dir || process.cwd())
 
 let app = express()
 
@@ -77,11 +77,12 @@ server.listen(tcpport)
 console.log('LISTENING @ http://127.0.0.1:'+tcpport)
 server.on('connection', function(socket) {
      socket = new JsonSocket(socket)
-     let watch = chokidar.watch(ROOT_DIR, {ignored: /[\/\\]\./,persistent: true})
+     let server_dir = path.join(ROOT_DIR,'server_dir')
+     let watch = chokidar.watch(server_dir, {ignored: /[\/\\]\./,persistent: true})
      watch.on('add', (path) => {
               let message = {
                 action: 'create',
-                path: path,
+                path: path.replace(server_dir, ""),
                 type: 'file',
                 contents: null,
                 updated: new Date().getTime()
@@ -90,7 +91,7 @@ server.on('connection', function(socket) {
      watch.on('change', (path) => {
               let message = {
                 action: 'update',
-                path: path,
+                path: path.replace(server_dir, ""),
                 type: 'file',
                 contents: null,
                 updated: new Date().getTime()
@@ -99,7 +100,7 @@ server.on('connection', function(socket) {
      watch.on('unlink', (path) => {
               let message = {
                 action: 'delete',
-                path: path,
+                path: path.replace(server_dir, ""),
                 type: 'file',
                 contents: null,
                 updated: new Date().getTime()
@@ -108,7 +109,7 @@ server.on('connection', function(socket) {
      watch.on('addDir', (path) => {
               let message = {
                 action: 'create',
-                path: path,
+                path: path.replace(server_dir, ""),
                 type: 'dir',
                 contents: null,
                 updated: new Date().getTime()
@@ -117,7 +118,7 @@ server.on('connection', function(socket) {
      watch.on('unlinkDir', (path) => {
               let message = {
                 action: 'delete',
-                path: path,
+                path: path.replace(server_dir, ""),
                 type: 'dir',
                 contents: null,
                 updated: new Date().getTime()
